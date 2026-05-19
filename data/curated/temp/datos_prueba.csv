@@ -1,0 +1,6 @@
+id, nombre, apellido, beneficio, fechaingreso
+1, Pedro, Morales, True, 2026-01-01T12:45:51Z
+2, Carolina, Zúñiga, True, 2025-01-01T14:25:54Z
+3, , Morales, False, 2024-01-01T12:45:52Z
+4, Alberto, Rojas, F, 2028-14-32T26:56:24Z
+5, Pátricio, Zúñiga, T, 2031-17-88T26:83:72Z
