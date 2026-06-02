@@ -168,6 +168,7 @@ with open(rutadestino+'datos_cuentas.csv', encoding='UTF-8') as archivo:
     reader = csv.DictReader(archivo)
 
     for i in reader:
+        del i['idcuenta']
         datacuentas.append(i)
 
 
@@ -199,6 +200,7 @@ with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
     reader = csv.DictReader(archivo)
 
     for i in reader:
+        del i['idtransaccion']
         datatransaccion.append(i)
 
 try:
@@ -229,6 +231,7 @@ with open(rutadestino+'datos_libro.csv', encoding='UTF-8') as archivo:
     reader = csv.DictReader(archivo)
 
     for i in reader:
+        del i['idlibro']
         datalibros.append(i)
 
 try:

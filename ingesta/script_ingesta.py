@@ -45,6 +45,7 @@ with open(rutadestino+'datos_cuentas.csv', encoding='UTF-8') as archivo:
     reader = csv.DictReader(archivo)
 
     for i in reader:
+        del i['idcuenta']
         # Agrega datos vacíos al request; supabase no permite valores vacíos, por lo que se agregan valores vacíos como placeholder, mientras que el archivo se mantiene
         if (i['moneda'].strip()) == '':
             i['moneda'] = None
@@ -83,6 +84,7 @@ with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
     reader = csv.DictReader(archivo)
 
     for i in reader:
+        del i['idtransaccion']
         # Agrega datos vacíos al request; supabase no permite valores vacíos, por lo que se agregan valores vacíos como placeholder, mientras que el archivo se mantiene
         if (i['monto'].strip()) == '':
             i['monto'] = None
@@ -120,6 +122,7 @@ with open(rutadestino+'datos_libro.csv', encoding='UTF-8') as archivo:
     reader = csv.DictReader(archivo)
 
     for i in reader:
+        del i['idlibro']
         # Agrega datos vacíos al request; supabase no permite valores vacíos, por lo que se agregan valores vacíos como placeholder, mientras que el archivo se mantiene
         if (i['saldo'].strip()) == '':
             i['saldo'] = None
