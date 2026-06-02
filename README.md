@@ -17,7 +17,7 @@ Repositorio para trabajo remoto para el proyecto de Gestión de datos de IA; con
 
 # Instrucciones de instalación  
 1. Clonar el repositorio (git clone https://github.com/xxgnoxx/ProyectoIADuoc1)  
-2. Revisar que la carpeta 'datos_nuevos' tenga los datos necesarios (incluidos en el repositorio)  
+2. Revisar que la carpeta 'datos_nuevos' tenga los datos necesarios  
 3. Revisar que las carpetas 'data' y sus subcarpetas 'raw', 'validated' y 'curated' estén presentes  
 4. Asegurar que Docker Desktop esté instalado y ejecutado  
 5. Revisar que la API en Render esté corriendo  
