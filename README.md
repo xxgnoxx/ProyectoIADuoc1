@@ -20,7 +20,7 @@ Repositorio para trabajo remoto para el proyecto de Gestión de datos de IA; con
 2. Revisar que la carpeta 'datos_nuevos' tenga los datos necesarios (incluidos en el repositorio)  
 3. Asegurar que Docker Desktop esté instalado y ejecutado  
 4. Revisar que la API en Render esté corriendo  
-5. Instalar los contenedores usando 'docker-compose up' en la carpeta raíz del proyecto; alternativamente, usar 'docker-compose up -d' si no se necesita ver los logs  
+5. Instalar y ejecutar los contenedores usando 'docker-compose up' en la carpeta raíz del proyecto; alternativamente, usar 'docker-compose up -d' si no se necesita ver los logs  
 
 # Desinstalación  
 1. Ejecutar 'docker-compose down' en la carpeta raíz  
