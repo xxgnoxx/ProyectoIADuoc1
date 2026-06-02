@@ -1,0 +1,42 @@
+services:
+  ###### INGESTA
+  ingesta:
+    image: python:3.12-slim
+    container_name: contenedor_ingesta
+    volumes:
+      - ./ingesta:/app
+      - ./datos_nuevos:/app/datos_nuevos
+      - ./data:/app/data
+    working_dir: /app
+    command: >
+      bash -c "pip install --no-cache-dir -r requirements.txt && python script_ingesta.py"
+
+  ##### LIMPIEZA
+  limpieza:
+    image: python:3.12-slim
+    container_name: contenedor_limpieza
+    volumes:
+      - ./limpieza:/app
+      - ./datos_nuevos:/app/datos_nuevos
+      - ./data:/app/data
+    working_dir: /app
+    command: >
+      bash -c "pip install --no-cache-dir -r requirements.txt && python script_limpieza.py"
+    depends_on:
+      ingesta:  # CONDICIÓN: No iniciar hasta que el contenedor de ingesta se ejecute
+        condition: service_completed_successfully # SUBCONDICIÓN: Evita que se ejecute hasta que la fase de ingesta esté completa
+
+  ##### VALIDACIÓN
+  validacion:
+    image: python:3.12-slim
+    container_name: contenedor_validacion
+    volumes:
+      - ./validacion:/app
+      - ./datos_nuevos:/app/datos_nuevos
+      - ./data:/app/data
+    working_dir: /app
+    command: >
+      bash -c "pip install --no-cache-dir -r requirements.txt && python script_validacion.py"
+    depends_on:
+      limpieza: # CONDICIÓN: No iniciar hasta que el contenedor de limpieza se ejecute
+        condition: service_completed_successfully # SUBCONDICIÓN: Evita que se ejecute hasta que la fase de limpieza esté completa
