@@ -38,7 +38,7 @@ try:
 except Exception as texto_error:
     print(f"ERROR: {texto_error}")
 
-# Abre el archivo de cuentas y añade los datos a la lista "datacuentas"
+##### TABLA CUENTA
 with open(rutadestino+'datos_cuentas.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
     
@@ -57,7 +57,7 @@ with open(rutadestino+'datos_cuentas.csv', encoding='UTF-8') as archivo:
 
 
 
-##### TABLA CUENTA
+###### ENVÍO TABLA CUENTA
 try:
     print("ENVIANDO DATOS A TABLA CUENTA EN BRONZE")
     respuesta = requests.post(endpoint, json=datacuentas, headers=headers_api_cuenta,timeout=10)
@@ -77,7 +77,7 @@ except requests.exceptions.Timeout as errt:
 except requests.exceptions.RequestException as err:
     print(f"Algo salió mal: {err}")
 
-    # Abre el archivo de transacciones y añade los datos a la lista "datatransaccion"
+##### TABLA TRANSACCIÓN
 with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
     
@@ -94,6 +94,7 @@ with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
             i['estadotransaccion'] = None
         datatransaccion.append(i)
 
+##### ENVÍO TABLA TRANSACCION
 try:
     print("ENVIANDO DATOS A TABLA TRANSACCION EN BRONZE")
     respuesta = requests.post(endpoint, json=datatransaccion, headers=headers_api_transaccion,timeout=10)
@@ -115,7 +116,6 @@ except requests.exceptions.RequestException as err:
 
 
 ##### TABLA LIBRO
-# Abre el archivo de transacciones y añade los datos a la lista "datatransaccion"
 with open(rutadestino+'datos_libro.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
     
@@ -132,6 +132,7 @@ with open(rutadestino+'datos_libro.csv', encoding='UTF-8') as archivo:
             i['fechalibro'] = None
         datalibros.append(i)
 
+##### ENVÍO TABLA LIBRO
 try:
     print("ENVIANDO DATOS A TABLA LIBRO EN BRONZE")
     respuesta = requests.post(endpoint, json=datalibros, headers=headers_api_libro,timeout=10)

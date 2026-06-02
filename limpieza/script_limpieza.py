@@ -16,7 +16,7 @@ archivocuentas = "datos_cuentas.csv"
 archivotransaccion = "datos_transaccion.csv"
 archivolibro = "datos_libro.csv"
 datacuentas = [] # Tabla que guarda los datos de cuenta en formato json
-datatransaccion = [] # Tabla que guarda los datos de cuenta en formato json
+datatransaccion = [] # Tabla que guarda los datos de transaccion en formato json
 datalibros = [] # Tabla que guarda los datos en libro formato json
 endpoint = 'https://gestioniaapi.onrender.com/enviar-datos'
 
@@ -40,7 +40,7 @@ print(f"RUTA DE ORIGEN: {rutaorigen}")
 print(f"RUTA DE DESTINO: {rutadestino}")
 
 
-##### TABLA CUENTA
+##### LIMPIEZA TABLA CUENTA
 try:
     #Abre el archivo con pandas para editarlo con otras funciones
     df = pd.read_csv(rutaorigen+archivocuentas)
@@ -52,7 +52,7 @@ except Exception as errorprincipal:
 # Si no hay un error, continúa
 else:
     #1. Reemplaza tildes u otros caracteres con letras regulares, con iconv
-    #sp.run([f'iconv -t ASCII//TRANSLIT {rutadestino+'datos_cuentas.csv'} > temp.csv && mv temp.csv {rutadestino+'datos_prueba.csv'}'],shell=True)
+    sp.run([f'iconv -t ASCII//TRANSLIT {rutadestino+'datos_cuentas.csv'} > temp.csv && mv temp.csv {rutadestino+'datos_prueba.csv'}'],shell=True)
 
     #2. Reemplaza espacios vacíos con "NULL" usando pandas:
     #r = Raw (indica que es un string en bruto, para evitar interpretar caracteres especiales)
@@ -81,7 +81,7 @@ else:
         print(f'El archivo {archivocuentas} ha sido limpiado con éxito')
 
 
-##### TABLA TRANSACCION
+##### LIMPIEZA TABLA TRANSACCION
 try:
     #Abre el archivo con pandas para editarlo con otras funciones
     df = pd.read_csv(rutaorigen+archivotransaccion)
@@ -93,16 +93,9 @@ except Exception as errorprincipal:
 # Si no hay un error, continúa
 else:
     #1. Reemplaza tildes u otros caracteres con letras regulares, con iconv
-    #sp.run([f'iconv -t ASCII//TRANSLIT {rutadestino+'datos_transaccion.csv'} > temp.csv && mv temp.csv {rutadestino+'datos_prueba.csv'}'],shell=True)
+    sp.run([f'iconv -t ASCII//TRANSLIT {rutadestino+'datos_transaccion.csv'} > temp.csv && mv temp.csv {rutadestino+'datos_prueba.csv'}'],shell=True)
 
-    #2. Reemplaza espacios vacíos con "NULL" usando pandas:
-    #r = Raw (indica que es un string en bruto, para evitar interpretar caracteres especiales)
-    #^ = Inicio de línea
-    #\s = Espacios vacíos (para evitar que interprete espacios sin contenido como no nulos)
-    #* = Indica una o múltiples apariciones
-    #$ = Fin de línea
-    #np.nan = Reemplaza estos espacios con NaN (Not A Number), para el propósito de usar fillna
-    #fillna = Reemplaza los NaN definidos con un string que diga NULL
+    #2. Reemplaza espacios vacíos con "NULL" usando pandas
 
     #Columna de monto; reemplaza nulos con 0
     df['monto'] = df['monto'].replace(r'^\s*$', np.nan, regex=True).fillna(0)
@@ -122,7 +115,7 @@ else:
         print(f'El archivo {archivotransaccion} ha sido limpiado con éxito')
 
 
-##### TABLA LIBRO
+##### LIMPIEZA TABLA LIBRO
 try:
     #Abre el archivo con pandas para editarlo con otras funciones
     df = pd.read_csv(rutaorigen+archivolibro)
@@ -134,16 +127,9 @@ except Exception as errorprincipal:
 # Si no hay un error, continúa
 else:
     #1. Reemplaza tildes u otros caracteres con letras regulares, con iconv
-    #sp.run([f'iconv -t ASCII//TRANSLIT {rutadestino+'datos_libro.csv'} > temp.csv && mv temp.csv {rutadestino+'datos_prueba.csv'}'],shell=True)
+    sp.run([f'iconv -t ASCII//TRANSLIT {rutadestino+'datos_libro.csv'} > temp.csv && mv temp.csv {rutadestino+'datos_prueba.csv'}'],shell=True)
 
-    #2. Reemplaza espacios vacíos con "NULL" usando pandas:
-    #r = Raw (indica que es un string en bruto, para evitar interpretar caracteres especiales)
-    #^ = Inicio de línea
-    #\s = Espacios vacíos (para evitar que interprete espacios sin contenido como no nulos)
-    #* = Indica una o múltiples apariciones
-    #$ = Fin de línea
-    #np.nan = Reemplaza estos espacios con NaN (Not A Number), para el propósito de usar fillna
-    #fillna = Reemplaza los NaN definidos con un string que diga NULL
+    #2. Reemplaza espacios vacíos con "NULL" usando pandas
 
     #Columna de saldo; reemplaza nulos con 0
     df['saldo'] = df['saldo'].replace(r'^\s*$', np.nan, regex=True).fillna(0)
@@ -173,7 +159,7 @@ with open(rutadestino+'datos_cuentas.csv', encoding='UTF-8') as archivo:
 
 
 
-##### TABLA CUENTA
+##### ENVÍO TABLA CUENTA
 try:
     print("ENVIANDO DATOS A TABLA CUENTA EN SILVER")
     respuesta = requests.post(endpoint, json=datacuentas, headers=headers_api_cuenta,timeout=10)
@@ -203,6 +189,7 @@ with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
         del i['idtransaccion']
         datatransaccion.append(i)
 
+##### ENVÍO TABLA TRANSACCION
 try:
     print("ENVIANDO DATOS A TABLA TRANSACCION EN SILVER")
     respuesta = requests.post(endpoint, json=datatransaccion, headers=headers_api_transaccion,timeout=10)
@@ -223,8 +210,8 @@ except requests.exceptions.RequestException as err:
     print(f"Algo salió mal: {err}")
 
 
-##### TABLA LIBRO
-# Abre el archivo de transacciones y añade los datos a la lista "datatransaccion"
+##### ENVÍO TABLA LIBRO
+# Abre el archivo de libro y añade los datos a la lista "datatransaccion"
 with open(rutadestino+'datos_libro.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
     

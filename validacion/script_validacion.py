@@ -14,7 +14,7 @@ archivocuentas = "datos_cuentas.csv"
 archivotransaccion = "datos_transaccion.csv"
 archivolibro = "datos_libro.csv"
 datacuentas = [] # Tabla que guarda los datos de cuenta en formato json
-datatransaccion = [] # Tabla que guarda los datos de cuenta en formato json
+datatransaccion = [] # Tabla que guarda los datos de transaccion en formato json
 datalibros = [] # Tabla que guarda los datos en libro formato json
 endpoint = 'https://gestioniaapi.onrender.com/enviar-datos'
 
@@ -135,6 +135,7 @@ else:
 
 
 # SUBIDA A API
+##### TABLA CUENTA
 # Abre el archivo de cuentas y añade los datos a la lista "datacuentas"
 with open(rutadestino+'datos_cuentas.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
@@ -146,8 +147,7 @@ with open(rutadestino+'datos_cuentas.csv', encoding='UTF-8') as archivo:
         datacuentas.append(i)
 
 
-
-##### TABLA CUENTA
+##### ENVÍO TABLA CUENTA
 try:
     print("ENVIANDO DATOS A TABLA CUENTA EN GOLD")
     respuesta = requests.post(endpoint, json=datacuentas, headers=headers_api_cuenta,timeout=10)
@@ -167,7 +167,8 @@ except requests.exceptions.Timeout as errt:
 except requests.exceptions.RequestException as err:
     print(f"Algo salió mal: {err}")
 
-    # Abre el archivo de transacciones y añade los datos a la lista "datatransaccion"
+##### TABLA TRANSACCIONES
+# Abre el archivo de transacciones y añade los datos a la lista "datatransaccion"
 with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
     
@@ -177,6 +178,7 @@ with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
         del i['idtransaccion']
         datatransaccion.append(i)
 
+##### ENVÍO TABLA TRANSACCION
 try:
     print("ENVIANDO DATOS A TABLA TRANSACCION EN GOLD")
     respuesta = requests.post(endpoint, json=datatransaccion, headers=headers_api_transaccion,timeout=10)
@@ -198,7 +200,7 @@ except requests.exceptions.RequestException as err:
 
 
 ##### TABLA LIBRO
-# Abre el archivo de transacciones y añade los datos a la lista "datatransaccion"
+# Abre el archivo de libro y añade los datos a la lista "datalibro"
 with open(rutadestino+'datos_libro.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
     
