@@ -16,6 +16,7 @@ endpoint = 'https://gestioniaapi.onrender.com/enviar-datos'
 load_dotenv(find_dotenv())
 
 apikey = os.getenv("PASSWORD_SUPABASE")
+print(apikey) # DEBUG
 
 headers_api_cuenta = {
     "Schema": "bronze",
