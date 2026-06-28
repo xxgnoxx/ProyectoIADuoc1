@@ -1,9 +1,7 @@
-import shutil as sh
 import csv as csv
 import time as time
 import pandas as pd
 import requests
-from datetime import date
 from datetime import datetime
 import os
 from dotenv import load_dotenv, find_dotenv
