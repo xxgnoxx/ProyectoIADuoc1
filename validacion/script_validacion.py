@@ -5,6 +5,8 @@ import pandas as pd
 import requests
 from datetime import date
 from datetime import datetime
+import os
+from dotenv import load_dotenv, find_dotenv
 
 # VARIABLES
 
@@ -19,19 +21,26 @@ datatransaccion = [] # Tabla que guarda los datos de transaccion en formato json
 datalibros = [] # Tabla que guarda los datos en libro formato json
 endpoint = 'https://gestioniaapi.onrender.com/enviar-datos'
 
+load_dotenv(find_dotenv())
+
+apikey = os.getenv("PASSWORD_SUPABASE")
+
 headers_api_cuenta = {
     "Schema": "gold",
-    "Table": "cuenta"
+    "Table": "cuenta",
+    "apikey": apikey
 }
 
 headers_api_transaccion = {
     "Schema": "gold",
-    "Table": "transaccion"
+    "Table": "transaccion",
+    "apikey": apikey
 }
 
 headers_api_libro = {
     "Schema": "gold",
-    "Table": "libro"
+    "Table": "libro",
+    "apikey": apikey
 }
 
 # Prints para mostrar las carpetas de origen y destino definidas en la consola

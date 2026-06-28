@@ -3,6 +3,8 @@ import csv
 import requests
 from datetime import date
 from datetime import datetime
+import os
+from dotenv import load_dotenv, find_dotenv
 
 rutaorigen = "datos_nuevos" # Carpeta de origen; desde aquí se copian los datos
 rutadestino = "data/raw/" # Carpeta destino; los datos de la carpeta origen se agregarán aquí. Archivos con nombres idénticos serán reemplazados.
@@ -11,19 +13,26 @@ datatransaccion = [] # Tabla que guarda los datos de cuenta en formato json
 datalibros = [] # Tabla que guarda los datos en libro formato json
 endpoint = 'https://gestioniaapi.onrender.com/enviar-datos'
 
+load_dotenv(find_dotenv())
+
+apikey = os.getenv("PASSWORD_SUPABASE")
+
 headers_api_cuenta = {
     "Schema": "bronze",
-    "Table": "cuenta"
+    "Table": "cuenta",
+    "apikey": apikey
 }
 
 headers_api_transaccion = {
     "Schema": "bronze",
-    "Table": "transaccion"
+    "Table": "transaccion",
+    "apikey": apikey
 }
 
 headers_api_libro = {
     "Schema": "bronze",
-    "Table": "libro"
+    "Table": "libro",
+    "apikey": apikey
 }
 
 # Prints para mostrar las carpetas de origen y destino definidas en la consola
