@@ -5,6 +5,7 @@ import requests
 from datetime import datetime
 import os
 from dotenv import load_dotenv, find_dotenv
+import psutil
 
 # VARIABLES
 
@@ -85,6 +86,11 @@ else:
 timestampreadend1 = datetime.now().timestamp()
 print(f'Tiempo de fin lectura de datos cuenta: {datetime.fromtimestamp(timestampreadend1)}')
 
+### CHECKPOINT DE CONSUMO DE CPU Y RAM
+print(f'USO DE CPU DEL SISTEMA: {psutil.cpu_percent(interval=None)}%')
+ram_info = psutil.virtual_memory()
+print(f"USO DE RAM DEL SISTEMA: {ram_info.used / (1024**3):.2f}/{ram_info.total / (1024**3):.2f} GB")
+
 ##### TABLA TRANSACCION
 timestampread2 = datetime.now().timestamp()
 print(f'Tiempo de inicio lectura de datos transaccion: {datetime.fromtimestamp(timestampread2)}')
@@ -121,6 +127,11 @@ else:
 timestampreadend2 = datetime.now().timestamp()
 print(f'Tiempo de fin lectura de datos transaccion: {datetime.fromtimestamp(timestampreadend2)}')
 
+### CHECKPOINT DE CONSUMO DE CPU Y RAM
+print(f'USO DE CPU DEL SISTEMA: {psutil.cpu_percent(interval=None)}%')
+ram_info = psutil.virtual_memory()
+print(f"USO DE RAM DEL SISTEMA: {ram_info.used / (1024**3):.2f}/{ram_info.total / (1024**3):.2f} GB")
+
 ##### TABLA LIBRO
 timestampread3 = datetime.now().timestamp()
 print(f'Tiempo de inicio lectura de datos libro: {datetime.fromtimestamp(timestampread3)}')
@@ -155,6 +166,11 @@ else:
 
 timestampreadend3 = datetime.now().timestamp()
 print(f'Tiempo de fin lectura de datos libro: {datetime.fromtimestamp(timestampreadend3)}')
+
+### CHECKPOINT DE CONSUMO DE CPU Y RAM
+print(f'USO DE CPU DEL SISTEMA: {psutil.cpu_percent(interval=None)}%')
+ram_info = psutil.virtual_memory()
+print(f"USO DE RAM DEL SISTEMA: {ram_info.used / (1024**3):.2f}/{ram_info.total / (1024**3):.2f} GB")
 
 # SUBIDA A API
 ##### TABLA CUENTA
@@ -194,6 +210,11 @@ except requests.exceptions.RequestException as err:
 timestampsendfin1 = datetime.now().timestamp()
 print(f'Tiempo de fin envío de datos cuenta: {datetime.fromtimestamp(timestampsendfin1)}')
 
+### CHECKPOINT DE CONSUMO DE CPU Y RAM
+print(f'USO DE CPU DEL SISTEMA: {psutil.cpu_percent(interval=None)}%')
+ram_info = psutil.virtual_memory()
+print(f"USO DE RAM DEL SISTEMA: {ram_info.used / (1024**3):.2f}/{ram_info.total / (1024**3):.2f} GB")
+
 ##### TABLA TRANSACCIONES
 # Abre el archivo de transacciones y añade los datos a la lista "datatransaccion"
 with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
@@ -204,6 +225,11 @@ with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
     for i in reader:
         del i['idtransaccion']
         datatransaccion.append(i)
+
+### CHECKPOINT DE CONSUMO DE CPU Y RAM
+print(f'USO DE CPU DEL SISTEMA: {psutil.cpu_percent(interval=None)}%')
+ram_info = psutil.virtual_memory()
+print(f"USO DE RAM DEL SISTEMA: {ram_info.used / (1024**3):.2f}/{ram_info.total / (1024**3):.2f} GB")
 
 ##### ENVÍO TABLA TRANSACCION
 timestampsend2 = datetime.now().timestamp()
@@ -229,6 +255,11 @@ except requests.exceptions.RequestException as err:
 
 timestampsendfin2 = datetime.now().timestamp()
 print(f'Tiempo de fin envío de datos transaccion: {datetime.fromtimestamp(timestampsendfin2)}')
+
+### CHECKPOINT DE CONSUMO DE CPU Y RAM
+print(f'USO DE CPU DEL SISTEMA: {psutil.cpu_percent(interval=None)}%')
+ram_info = psutil.virtual_memory()
+print(f"USO DE RAM DEL SISTEMA: {ram_info.used / (1024**3):.2f}/{ram_info.total / (1024**3):.2f} GB")
 
 ##### TABLA LIBRO
 timestampsend3 = datetime.now().timestamp()
@@ -267,3 +298,8 @@ print(f'Tiempo de fin envío de datos libro: {datetime.fromtimestamp(timestampse
 
 timestampend = datetime.now().timestamp()
 print(f'Tiempo de fin validación: {datetime.fromtimestamp(timestampend)}')
+
+### CHECKPOINT DE CONSUMO DE CPU Y RAM
+print(f'USO DE CPU DEL SISTEMA: {psutil.cpu_percent(interval=None)}%')
+ram_info = psutil.virtual_memory()
+print(f"USO DE RAM DEL SISTEMA: {ram_info.used / (1024**3):.2f}/{ram_info.total / (1024**3):.2f} GB")
