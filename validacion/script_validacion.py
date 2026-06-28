@@ -4,6 +4,7 @@ import time as time
 import pandas as pd
 import requests
 from datetime import date
+from datetime import datetime
 
 # VARIABLES
 
@@ -34,11 +35,15 @@ headers_api_libro = {
 }
 
 # Prints para mostrar las carpetas de origen y destino definidas en la consola
+timestampstart = datetime.now().timestamp()
+print(f'Tiempo de inicio validación: {datetime.fromtimestamp(timestampstart)}')
 print(f"RUTA DE ORIGEN: {rutaorigen}")
 print(f"RUTA DE DESTINO: {rutadestino}")
 
 
 ##### TABLA CUENTA
+timestampread1 = datetime.now().timestamp()
+print(f'Tiempo de inicio lectura de datos cuenta: {datetime.fromtimestamp(timestampread1)}')
 try:
     #Abre el archivo con pandas para editarlo con otras funciones
     df = pd.read_csv(rutaorigen+archivocuentas)
@@ -70,8 +75,12 @@ else:
     else:
         print(f'El archivo {archivocuentas} ha sido validado con éxito')
 
+timestampreadend1 = datetime.now().timestamp()
+print(f'Tiempo de fin lectura de datos cuenta: {datetime.fromtimestamp(timestampreadend1)}')
 
 ##### TABLA TRANSACCION
+timestampread2 = datetime.now().timestamp()
+print(f'Tiempo de inicio lectura de datos transaccion: {datetime.fromtimestamp(timestampread2)}')
 try:
     #Abre el archivo con pandas para editarlo con otras funciones
     df = pd.read_csv(rutaorigen+archivotransaccion)
@@ -102,8 +111,12 @@ else:
     else:
         print(f'El archivo {archivotransaccion} ha sido validado con éxito')
 
+timestampreadend2 = datetime.now().timestamp()
+print(f'Tiempo de fin lectura de datos transaccion: {datetime.fromtimestamp(timestampreadend2)}')
 
 ##### TABLA LIBRO
+timestampread3 = datetime.now().timestamp()
+print(f'Tiempo de inicio lectura de datos libro: {datetime.fromtimestamp(timestampread3)}')
 try:
     #Abre el archivo con pandas para editarlo con otras funciones
     df = pd.read_csv(rutaorigen+archivolibro)
@@ -133,9 +146,13 @@ else:
     else:
         print(f'El archivo {archivolibro} ha sido validado con éxito')
 
+timestampreadend3 = datetime.now().timestamp()
+print(f'Tiempo de fin lectura de datos libro: {datetime.fromtimestamp(timestampreadend3)}')
 
 # SUBIDA A API
 ##### TABLA CUENTA
+timestampsend1 = datetime.now().timestamp()
+print(f'Tiempo de inicio envío de datos cuenta: {datetime.fromtimestamp(timestampsend1)}')
 # Abre el archivo de cuentas y añade los datos a la lista "datacuentas"
 with open(rutadestino+'datos_cuentas.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
@@ -167,6 +184,9 @@ except requests.exceptions.Timeout as errt:
 except requests.exceptions.RequestException as err:
     print(f"Algo salió mal: {err}")
 
+timestampsendfin1 = datetime.now().timestamp()
+print(f'Tiempo de fin envío de datos cuenta: {datetime.fromtimestamp(timestampsendfin1)}')
+
 ##### TABLA TRANSACCIONES
 # Abre el archivo de transacciones y añade los datos a la lista "datatransaccion"
 with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
@@ -179,6 +199,8 @@ with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
         datatransaccion.append(i)
 
 ##### ENVÍO TABLA TRANSACCION
+timestampsend2 = datetime.now().timestamp()
+print(f'Tiempo de inicio envío de datos transaccion: {datetime.fromtimestamp(timestampsend2)}')
 try:
     print("ENVIANDO DATOS A TABLA TRANSACCION EN GOLD")
     respuesta = requests.post(endpoint, json=datatransaccion, headers=headers_api_transaccion,timeout=10)
@@ -198,8 +220,12 @@ except requests.exceptions.Timeout as errt:
 except requests.exceptions.RequestException as err:
     print(f"Algo salió mal: {err}")
 
+timestampsendfin2 = datetime.now().timestamp()
+print(f'Tiempo de fin envío de datos transaccion: {datetime.fromtimestamp(timestampsendfin2)}')
 
 ##### TABLA LIBRO
+timestampsend3 = datetime.now().timestamp()
+print(f'Tiempo de inicio envío de datos libro: {datetime.fromtimestamp(timestampsend3)}')
 # Abre el archivo de libro y añade los datos a la lista "datalibro"
 with open(rutadestino+'datos_libro.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
@@ -228,3 +254,9 @@ except requests.exceptions.Timeout as errt:
     print(f"Error de Tiempo de Espera (Timeout): {errt}")
 except requests.exceptions.RequestException as err:
     print(f"Algo salió mal: {err}")
+
+timestampsendfin3 = datetime.now().timestamp()
+print(f'Tiempo de fin envío de datos libro: {datetime.fromtimestamp(timestampsendfin3)}')
+
+timestampend = datetime.now().timestamp()
+print(f'Tiempo de fin validación: {datetime.fromtimestamp(timestampend)}')

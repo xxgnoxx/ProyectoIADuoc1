@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import requests
 from datetime import date
+from datetime import datetime
 
 # VARIABLES
 
@@ -36,11 +37,14 @@ headers_api_libro = {
 }
 
 # Prints para mostrar las carpetas de origen y destino definidas en la consola
+timestampstart = datetime.now().timestamp()
+print(f'Tiempo de inicio limpieza: {datetime.fromtimestamp(timestampstart)}')
 print(f"RUTA DE ORIGEN: {rutaorigen}")
 print(f"RUTA DE DESTINO: {rutadestino}")
 
-
 ##### LIMPIEZA TABLA CUENTA
+timestampread1 = datetime.now().timestamp()
+print(f'Tiempo de inicio lectura de datos cuenta: {datetime.fromtimestamp(timestampread1)}')
 try:
     #Abre el archivo con pandas para editarlo con otras funciones
     df = pd.read_csv(rutaorigen+archivocuentas)
@@ -79,9 +83,12 @@ else:
         print(f'ERROR AL GUARDAR: {error}')
     else:
         print(f'El archivo {archivocuentas} ha sido limpiado con éxito')
-
+timestampreadend1 = datetime.now().timestamp()
+print(f'Tiempo de fin lectura de datos cuenta: {datetime.fromtimestamp(timestampreadend1)}')
 
 ##### LIMPIEZA TABLA TRANSACCION
+timestampread2 = datetime.now().timestamp()
+print(f'Tiempo de inicio lectura de datos transaccion: {datetime.fromtimestamp(timestampread2)}')
 try:
     #Abre el archivo con pandas para editarlo con otras funciones
     df = pd.read_csv(rutaorigen+archivotransaccion)
@@ -113,9 +120,12 @@ else:
         print(f'ERROR AL GUARDAR: {error}')
     else:
         print(f'El archivo {archivotransaccion} ha sido limpiado con éxito')
-
+timestampreadend2 = datetime.now().timestamp()
+print(f'Tiempo de fin lectura de datos transaccion: {datetime.fromtimestamp(timestampreadend2)}')
 
 ##### LIMPIEZA TABLA LIBRO
+timestampread3 = datetime.now().timestamp()
+print(f'Tiempo de inicio lectura de datos libro: {datetime.fromtimestamp(timestampread3)}')
 try:
     #Abre el archivo con pandas para editarlo con otras funciones
     df = pd.read_csv(rutaorigen+archivolibro)
@@ -144,10 +154,13 @@ else:
         print(f'ERROR AL GUARDAR: {error}')
     else:
         print(f'El archivo {archivolibro} ha sido limpiado con éxito')
-
+timestampreadend3 = datetime.now().timestamp()
+print(f'Tiempo de fin lectura de datos libro: {datetime.fromtimestamp(timestampreadend3)}')
 
 # SUBIDA A API
 # Abre el archivo de cuentas y añade los datos a la lista "datacuentas"
+timestampsend1 = datetime.now().timestamp()
+print(f'Tiempo de inicio envío de datos cuenta: {datetime.fromtimestamp(timestampsend1)}')
 with open(rutadestino+'datos_cuentas.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
     
@@ -156,8 +169,6 @@ with open(rutadestino+'datos_cuentas.csv', encoding='UTF-8') as archivo:
     for i in reader:
         del i['idcuenta']
         datacuentas.append(i)
-
-
 
 ##### ENVÍO TABLA CUENTA
 try:
@@ -189,7 +200,12 @@ with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
         del i['idtransaccion']
         datatransaccion.append(i)
 
+timestampsendfin1 = datetime.now().timestamp()
+print(f'Tiempo de fin envío de datos cuenta: {datetime.fromtimestamp(timestampsendfin1)}')
+
 ##### ENVÍO TABLA TRANSACCION
+timestampsend2 = datetime.now().timestamp()
+print(f'Tiempo de inicio envío de datos transaccion: {datetime.fromtimestamp(timestampsend2)}')
 try:
     print("ENVIANDO DATOS A TABLA TRANSACCION EN SILVER")
     respuesta = requests.post(endpoint, json=datatransaccion, headers=headers_api_transaccion,timeout=10)
@@ -209,8 +225,12 @@ except requests.exceptions.Timeout as errt:
 except requests.exceptions.RequestException as err:
     print(f"Algo salió mal: {err}")
 
+timestampsendfin2 = datetime.now().timestamp()
+print(f'Tiempo de fin envío de datos transaccion: {datetime.fromtimestamp(timestampsendfin2)}')
 
 ##### ENVÍO TABLA LIBRO
+timestampsend3 = datetime.now().timestamp()
+print(f'Tiempo de inicio envío de datos libro: {datetime.fromtimestamp(timestampsend3)}')
 # Abre el archivo de libro y añade los datos a la lista "datatransaccion"
 with open(rutadestino+'datos_libro.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
@@ -239,3 +259,8 @@ except requests.exceptions.Timeout as errt:
     print(f"Error de Tiempo de Espera (Timeout): {errt}")
 except requests.exceptions.RequestException as err:
     print(f"Algo salió mal: {err}")
+timestampsendfin3 = datetime.now().timestamp()
+print(f'Tiempo de fin envío de datos libro: {datetime.fromtimestamp(timestampsendfin3)}')
+
+timestampend = datetime.now().timestamp()
+print(f'Tiempo de fin limpieza: {datetime.fromtimestamp(timestampend)}')

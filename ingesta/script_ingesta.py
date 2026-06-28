@@ -2,6 +2,7 @@ import shutil as sh
 import csv
 import requests
 from datetime import date
+from datetime import datetime
 
 rutaorigen = "datos_nuevos" # Carpeta de origen; desde aquí se copian los datos
 rutadestino = "data/raw/" # Carpeta destino; los datos de la carpeta origen se agregarán aquí. Archivos con nombres idénticos serán reemplazados.
@@ -26,6 +27,8 @@ headers_api_libro = {
 }
 
 # Prints para mostrar las carpetas de origen y destino definidas en la consola
+timestampstart = datetime.now().timestamp()
+print(f'Tiempo de inicio ingesta: {datetime.fromtimestamp(timestampstart)}')
 print(f"RUTA DE ORIGEN: {rutaorigen}")
 print(f"RUTA DE DESTINO: {rutadestino}")
 
@@ -39,6 +42,8 @@ except Exception as texto_error:
     print(f"ERROR: {texto_error}")
 
 ##### TABLA CUENTA
+timestampread1 = datetime.now().timestamp()
+print(f'Tiempo de inicio lectura de datos cuenta: {datetime.fromtimestamp(timestampread1)}')
 with open(rutadestino+'datos_cuentas.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
     
@@ -54,10 +59,14 @@ with open(rutadestino+'datos_cuentas.csv', encoding='UTF-8') as archivo:
         if (i['estado'].strip()) == '':
             i['estado'] = None
         datacuentas.append(i)
+timestampreadend1 = datetime.now().timestamp()
+print(f'Tiempo de fin lectura de datos cuenta: {datetime.fromtimestamp(timestampreadend1)}')
 
 
 
 ###### ENVÍO TABLA CUENTA
+timestampsend1 = datetime.now().timestamp()
+print(f'Tiempo de inicio envío de datos cuenta: {datetime.fromtimestamp(timestampsend1)}')
 try:
     print("ENVIANDO DATOS A TABLA CUENTA EN BRONZE")
     respuesta = requests.post(endpoint, json=datacuentas, headers=headers_api_cuenta,timeout=10)
@@ -77,7 +86,12 @@ except requests.exceptions.Timeout as errt:
 except requests.exceptions.RequestException as err:
     print(f"Algo salió mal: {err}")
 
+timestampsendfin1 = datetime.now().timestamp()
+print(f'Tiempo de fin envío de datos cuenta: {datetime.fromtimestamp(timestampsendfin1)}')
+
 ##### TABLA TRANSACCIÓN
+timestampread2 = datetime.now().timestamp()
+print(f'Tiempo de inicio lectura de datos transaccion: {datetime.fromtimestamp(timestampread2)}')
 with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
     
@@ -93,8 +107,12 @@ with open(rutadestino+'datos_transaccion.csv', encoding='UTF-8') as archivo:
         if (i['estadotransaccion'].strip()) == '':
             i['estadotransaccion'] = None
         datatransaccion.append(i)
+timestampreadend2 = datetime.now().timestamp()
+print(f'Tiempo de fin lectura de datos transaccion: {datetime.fromtimestamp(timestampreadend2)}')
 
 ##### ENVÍO TABLA TRANSACCION
+timestampsend2 = datetime.now().timestamp()
+print(f'Tiempo de inicio envío de datos transaccion: {datetime.fromtimestamp(timestampsend2)}')
 try:
     print("ENVIANDO DATOS A TABLA TRANSACCION EN BRONZE")
     respuesta = requests.post(endpoint, json=datatransaccion, headers=headers_api_transaccion,timeout=10)
@@ -114,8 +132,12 @@ except requests.exceptions.Timeout as errt:
 except requests.exceptions.RequestException as err:
     print(f"Algo salió mal: {err}")
 
+timestampsendfin2 = datetime.now().timestamp()
+print(f'Tiempo de fin envío de datos transaccion: {datetime.fromtimestamp(timestampsendfin2)}')
 
 ##### TABLA LIBRO
+timestampread3 = datetime.now().timestamp()
+print(f'Tiempo de inicio lectura de datos libro: {datetime.fromtimestamp(timestampread3)}')
 with open(rutadestino+'datos_libro.csv', encoding='UTF-8') as archivo:
     archivocsv = csv.reader(archivo, delimiter=',', quotechar='|')
     
@@ -131,8 +153,12 @@ with open(rutadestino+'datos_libro.csv', encoding='UTF-8') as archivo:
         if (i['fechalibro'].strip()) == '':
             i['fechalibro'] = None
         datalibros.append(i)
+timestampreadend3 = datetime.now().timestamp()
+print(f'Tiempo de fin lectura de datos libro: {datetime.fromtimestamp(timestampreadend3)}')
 
 ##### ENVÍO TABLA LIBRO
+timestampsend3 = datetime.now().timestamp()
+print(f'Tiempo de inicio envío de datos libro: {datetime.fromtimestamp(timestampsend3)}')
 try:
     print("ENVIANDO DATOS A TABLA LIBRO EN BRONZE")
     respuesta = requests.post(endpoint, json=datalibros, headers=headers_api_libro,timeout=10)
@@ -151,3 +177,8 @@ except requests.exceptions.Timeout as errt:
     print(f"Error de Tiempo de Espera (Timeout): {errt}")
 except requests.exceptions.RequestException as err:
     print(f"Algo salió mal: {err}")
+timestampsendfin3 = datetime.now().timestamp()
+print(f'Tiempo de fin envío de datos libro: {datetime.fromtimestamp(timestampsendfin3)}')
+
+timestampend = datetime.now().timestamp()
+print(f'Tiempo de fin ingesta: {datetime.fromtimestamp(timestampend)}')
