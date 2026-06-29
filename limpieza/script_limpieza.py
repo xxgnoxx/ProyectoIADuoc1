@@ -45,6 +45,8 @@ headers_api_libro = {
     "apikey": apikey
 }
 
+psutil.cpu_percent(interval=None) # Inicio de consumo de CPU; siempre empieza en 0, por lo que se inicia sin print para medir el consumo luego
+
 # Prints para mostrar las carpetas de origen y destino definidas en la consola
 timestampstart = datetime.now().timestamp()
 print(f'Tiempo de inicio limpieza: {datetime.fromtimestamp(timestampstart)}')
